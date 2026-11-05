@@ -135,7 +135,8 @@
   #excelMsg { margin-top: 10px; font-size: 15px; font-weight: 500; line-height: 1.5; }
   .btn-main { width: 100%; margin-top: 24px; height: 54px; border: 0; border-radius: 14px; background: var(--accent); color: #fff; font-size: 17px; font-weight: 700; }
   .btn-main:hover { background: var(--accent-dark); }
-  .btn-soft { border: 0; border-radius: 12px; padding: 12px 22px; background: var(--accent-weak); color: var(--accent); font-size: 16px; font-weight: 700; }
+  .btn-soft.ghost { margin-left: 6px; background: var(--tile); color: var(--sub); }
+  .btn-soft {border: 0; border-radius: 12px; padding: 12px 22px; background: var(--accent-weak); color: var(--accent); font-size: 16px; font-weight: 700; }
 
   .note { margin: 0 0 6px; padding: 12px 14px; border-radius: 12px; background: var(--accent-weak); font-size: 15px; line-height: 1.6; }
   .guide h4 { margin: 18px 0 8px; font-size: 15px; font-weight: 700; color: var(--accent); }
@@ -186,6 +187,7 @@
       <p class="empty-title">학생 명단이 아직 없어요</p>
       <p>엑셀로 한 번에 올리거나, 한 명씩 직접 넣을 수 있어요.</p>
       <button class="btn-soft" data-open="rosterDlg">명단 만들기</button>
+      <button class="btn-soft ghost" id="demo">예시 명단으로 체험하기</button>
     </div>
   </section>
 
@@ -240,7 +242,7 @@
     <label>학생 추가 · 전입생도 여기서 넣어요</label>
     <div class="r-row r-add">
       <input id="newNo" class="r-no" placeholder="번호" inputmode="numeric">
-      <input id="newName" class="r-name" placeholder="이름">
+      <input id="newName" class="r-name" placeholder="이름 (예: 지유)">
       <button id="addBtn" class="r-addbtn">추가</button>
     </div>
 
@@ -361,7 +363,7 @@ async function readExcel(file) {
   return { text: lines.join('\n'), count: lines.length };
 }
 
-// 김철수 → 철수가, 시연 → 시연이가
+// 이시연 → 시연이가, 지유 → 지유가
 // ponytail: 3글자는 성 1자, 4글자는 성 2자로 보고, 2글자는 이름만 쓴 걸로 봄 (외자 이름 '이준'은 '이준이가'가 됨)
 function nickname(name) {
   const first = name.length >= 4 ? name.slice(2) : name.length === 3 ? name.slice(1) : name;
@@ -513,6 +515,8 @@ $('reset').onclick = () => { Object.assign(sel, { student: null, type: null, kin
 $('hideGuide').checked = !!cfg.hideGuide;
 $('hideGuide').onchange = () => { cfg.hideGuide = $('hideGuide').checked; store(); };
 if (!cfg.hideGuide) $('guide').showModal();
+// 예시 명단 (드림캐쳐 멤버 활동명)
+$('demo').onclick = () => setRoster(['지유', '수아', '시연', '한동', '유현', '다미', '가현'].map((name, i) => ({ no: String(i + 1), name })));
 $('addBtn').onclick = addStudent;
 $('newName').onkeydown = e => { if (e.key === 'Enter' && !e.isComposing) addStudent(); };
 render();
